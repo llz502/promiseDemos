@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+    .output{
+        height:100px;
+        border:1px solid black;
+    }
+    </style>
+    <button id="buttonx">AJAX TO X</button>
+    <button id="buttony">AJAX TO Y</button>
+    <div class="output" id="x"></div>
+    <div class="output" id="y"></div>
+
+    <script>
+    let buttonx = document.getElementById('buttonx')
+    let buttony = document.getElementById('buttony')
+    let outputx = document.getElementById('x')
+    let outputy = document.getElementById('y')
+        buttonx.onclick = function(){
+            ajax('GET','/x.txt',function(res,url){
+                outputx.innerText = res
+            },function(){})
+        }
+        buttony.onclick = function(){
+            ajax('GET','/y.txt',function(res,url){
+                outputy.innerText = res
+            },function(){})
+        }
+    
+    function ajax(method,url,successFn,errorFn){
+        let xhr = new XMLHttpRequest();
+        xhr.open(method,url)
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4){
+                if(xhr.status>=200&&xhr.status<400){
+                    successFn.call(null,xhr.responseText,xhr)
+                }else if(xhr.status>=400){
+                    errorFn.call(null,xhr.status,xhr)
+                }
+            }
+        }
+        xhr.send()
+    }
+    </script>
+</body>
+</html>
